@@ -1,38 +1,52 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from 'react';
+import { ShoppingCart as CartIcon } from 'lucide-react';
+import { CartProvider } from './context/CartContext';
+import { ProductCard } from './components/ProductCard';
+import { Cart } from './components/cart';
+import { products } from './data/products';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <CartProvider>
+      <div className="min-h-screen bg-gray-100">
+        {/* Header */}
+        <header className="bg-white shadow-sm">
+          <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 className="text-2xl font-bold text-gray-900">React Store</h1>
+            <button
+              onClick={() => setIsCartOpen(!isCartOpen)}
+              className="p-2 hover:bg-gray-100 rounded-full relative"
+            >
+              <CartIcon size={24} />
+            </button>
+          </div>
+        </header>
+
+        {/* Main Content */}
+        <main className="max-w-7xl mx-auto px-4 py-8">
+          <div className="flex gap-8">
+            {/* Products Grid */}
+            <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ${isCartOpen ? 'w-2/3' : 'w-full'}`}>
+              {products.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+
+            {/* Cart Sidebar */}
+            {isCartOpen && (
+              <div className="w-1/3 bg-white p-6 rounded-lg shadow-lg h-fit sticky top-4">
+                <h2 className="text-xl font-semibold mb-4">Shopping Cart</h2>
+                <Cart />
+              </div>
+            )}
+          </div>
+        </main>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </CartProvider>
+  );
 }
 
-export default App
+export default App;
 
-
-  
